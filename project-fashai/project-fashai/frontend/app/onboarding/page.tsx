@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import UploadModal from "@/app/dashboard/wardrobe/components/UploadModal";
 
 
 type Step = 0 | 1 | 2 | 3;
@@ -34,6 +35,7 @@ function OptionButton({
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>(0);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [answers, setAnswers] = useState<Answers>({
     style: "",
     mood: "",
@@ -49,11 +51,28 @@ export default function OnboardingPage() {
   }
 
   function finish() {
+    localStorage.setItem("fashai_mood",  answers.mood);
+    localStorage.setItem("fashai_style", answers.style);
     localStorage.setItem("fashai_onboarding_completed", "true");
     localStorage.removeItem("fashai_needs_onboarding");
     localStorage.removeItem("fashai_signup_email");
     localStorage.removeItem("fashai_is_new_user");
     router.push("/dashboard");
+  }
+
+  function handleYesUpload() {
+    answer("uploadWardrobe", "Yes");
+    setShowUploadModal(true);
+  }
+
+  function handleUploadClose() {
+    setShowUploadModal(false);
+    finish();
+  }
+
+  function handleUploadSuccess() {
+    setShowUploadModal(false);
+    finish();
   }
 
   return (
@@ -131,7 +150,7 @@ export default function OnboardingPage() {
             </p>
             <OptionButton
               label="Yes"
-              onClick={() => { answer("uploadWardrobe", "Yes"); finish(); }}
+              onClick={handleYesUpload}
             />
             <OptionButton
               label="Maybe Later"
@@ -141,6 +160,13 @@ export default function OnboardingPage() {
         )}
 
       </div>
+
+      {/* Upload Modal */}
+      <UploadModal
+        isOpen={showUploadModal}
+        onClose={handleUploadClose}
+        onSuccess={handleUploadSuccess}
+      />
     </div>
   );
 }
