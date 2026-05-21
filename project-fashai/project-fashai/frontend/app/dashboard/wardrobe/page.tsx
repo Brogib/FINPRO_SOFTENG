@@ -12,7 +12,6 @@ import {
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 
-
 interface WardrobeItem {
   id: number;
   name: string;
