@@ -20,7 +20,7 @@ WITH CHECK (auth.uid() = user_id);
 DROP POLICY IF EXISTS "Users can update own clothing items" ON public.clothing_items;
 CREATE POLICY "Users can update own clothing items"
 ON public.clothing_items FOR UPDATE
-USING (auth.uid() = user_id);
+USING (uid() = user_id);
 
 DROP POLICY IF EXISTS "Users can delete own clothing items" ON public.clothing_items;
 CREATE POLICY "Users can delete own clothing items"
